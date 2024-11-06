@@ -1,0 +1,52 @@
+<ng-container>
+    <div>
+        <form [formGroup]="guestForm" appFocusInvalidInput>
+            <mat-form-field>
+                <input matInput placeholder="Введите имя*" formControlName="name" />
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Введите фамилию*" formControlName="surname" />
+            </mat-form-field>
+            <mat-radio-group formControlName="guestAcceptance" (change)="onChange($event)">
+                <mat-radio-button [value]="true" [checked]="true">Буду</mat-radio-button>
+                <mat-radio-button [value]="false">Не смогу прийти</mat-radio-button>
+            </mat-radio-group>
+            <ng-container *ngIf="selectedValue">
+                <div>
+                    <label>Что вы предпочитаете в качестве основного блюда?</label>
+                    <mat-radio-group formControlName="food">
+                        <mat-radio-button value="meat" [checked]="true">Мясо</mat-radio-button>
+                        <mat-radio-button value="fish" >Рыба</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div>
+                    <label>Будет ли вам необходим трансфер?</label>
+                    <mat-radio-group formControlName="transfer">
+                        <mat-radio-button [value]="true" [checked]="true">Да</mat-radio-button>
+                        <mat-radio-button [value]="false">Нет</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div>
+                    <label>Будете ли вы с детьми?</label>
+                    <mat-radio-group formControlName="childrens">
+                        <mat-radio-button [value]="true">Да</mat-radio-button>
+                        <mat-radio-button [value]="false">Нет</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div>
+                    <label>Предпочтения по алкоголю*</label>
+                    <mat-checkbox formControlName="schampange">Игристое</mat-checkbox>
+                    <mat-checkbox formControlName="vine">Вино</mat-checkbox>
+                    <mat-checkbox formControlName="strongalcohol">Крепкий алкоголь</mat-checkbox>
+                    <mat-checkbox formControlName="alcoholfree">Безалкогольные напитки</mat-checkbox>
+                </div>
+                <div>
+                    <label>Комментарий</label>
+                    <mat-form-field>
+                        <input matInput placeholder="Любые пожелания..." formControlName="comment" />
+                    </mat-form-field>
+                </div>
+            </ng-container>
+        </form>
+    </div>
+</ng-container>

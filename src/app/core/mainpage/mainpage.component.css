@@ -1,0 +1,127 @@
+* {
+    border: 3px solid green;
+}
+
+
+@font-face {
+    font-family: "weddingFont";
+    src: url('/Floriselscript.ttf');
+}
+
+@font-face {
+    font-family: "KarstenThin";
+    src: url('/KarstenThin.otf');
+}
+
+.salutation_text {
+    font-family: "weddingFont";
+    color: #ffe8cf;
+    font-size: 1000%;
+    text-shadow: #120f03 1px 0 10px;
+}
+
+.salutation_date {
+    font-family: "weddingFont";
+    color: #ffe8cf;
+    font-size: 500%;
+    text-shadow: #120f03 1px 0 10px;
+}
+
+.slogan_header {
+    font-family: "KarstenThin";
+    color: #ffffff;
+    font-size: 500%;
+    text-align: center;
+    width: 50%;
+}
+
+.slogan_text {
+    font-family: "KarstenThin";
+    color: #ffffff;
+    font-size: 200%;
+    text-align: center;
+    width: 50%;
+    margin-bottom: 3em;
+}
+
+
+.main {
+    background-image: url('/backflowers.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.salutation {
+    margin: auto;
+    width: 100%;
+    min-width: 100%;
+}
+
+.slogan {
+    margin: auto;
+    background-color: #c99979;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.rsvp {
+    margin: auto;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+
+.rsvp_header {
+    font-family: "KarstenThin";
+    color: #b89076;
+    font-size: 500%;
+    text-align: center;
+    width: 50%;
+}
+
+.rsvp_text {
+    font-family: "KarstenThin";
+    color: #b89076;
+    font-size: 200%;
+    text-align: center;
+    width: 50%;
+}
+
+.button-row {
+    margin-top: 1em;
+    margin-bottom: 3em;
+}
+
+.acceptButton {
+    min-width: 15em;
+    min-height: 4em;
+    background-color: #b89076;
+}
+
+
+.center {
+    margin: auto;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*Центрирование по горизонтали*/
+    align-items: center;
+    /*Центрирование по вертикали */
+}
+
+.mat-step {
+    background-color: #ba005c !important;
+    color: #ba005c !important;
+}
+
+.mat-vertical-content-container {
+    visibility: false !important;
+    display: none !important;
+}

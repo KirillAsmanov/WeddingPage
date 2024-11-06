@@ -1,1 +1,70 @@
-<p>mainpage works!111111111</p>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="main">
+    <div class="salutation">
+        <div class="center">
+            <p class="salutation_text">Кирилл & Полина</p>
+            <p class="salutation_date">11.05.2025</p>
+        </div>
+    </div>
+
+    <div class="slogan">
+        <h1 class="slogan_header">Дорогие друзья!</h1>
+        <p class="slogan_text">
+            Жить, любить, чувствовать...
+            <br>
+            <br>
+            Однажды мы поняли, что нет ничего важнее этого. И что идти дальше мы хотим только вместе.
+            А теперь мечтаем, чтобы день нашей свадьбы стал красивым и ярким событием на этом увлекательном пути.
+            <br>
+            <br>
+            Мы будем очень рады, если вы разделите этот счастливый день с нами.
+            <br>
+            <br>
+            Увидимся на нашей свадьбе!
+        </p>
+    </div>
+
+
+    <div class="rsvp">
+        <h1 class="rsvp_header">RSVP</h1>
+        <p class="rsvp_text">
+            Пожалуйста, подтвердите или отклоните участие.
+            <br>
+            <br>
+            Мы стараемся сделать праздник незабываемым, поэтому будем рады, если вы подтвердите свое присутствие в
+            ближайшее время
+        </p>
+        <div class="button-row" *ngIf="!accept">
+            <button mat-flat-button class="acceptButton" (click)="onAccept()">Ответить</button>
+        </div>
+        <div *ngIf="accept">
+            <app-guestform *ngFor="let i of guestsCounter" [saveGuest]="eventsSubject.asObservable()" (sendGuest)="doAddGuestToList($event)">
+
+            </app-guestform>
+            <div class="button-row">
+                <button mat-flat-button class="acceptButton" (click)="onAdd()">Добавить</button>
+            </div>
+            <div class="button-row">
+                <button mat-flat-button class="acceptButton" (click)="onSave()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="faq">
+        <div class="rsvp">
+            <mat-stepper orientation="vertical" [linear]="isLinear" #stepper class="custom-stepper">
+                <mat-step [completed]="false" [editable]="true" state="number">
+                    <ng-template matStepLabel> Step 1</ng-template>
+                </mat-step>
+                <mat-step [completed]="false" [editable]="true" state="number">
+                    <ng-template matStepLabel> Step 1</ng-template>
+                </mat-step>
+                <mat-step [completed]="false" [editable]="true" state="number">
+                    <ng-template matStepLabel> Step 1</ng-template>
+                </mat-step>
+            </mat-stepper>
+        </div>
+    </div>
+</div>
