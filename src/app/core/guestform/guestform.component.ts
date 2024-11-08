@@ -1,11 +1,16 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Observable, Subscription } from 'rxjs';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { merge } from 'rxjs';
+
 
 @Component({
   selector: 'app-guestform',
@@ -20,117 +25,199 @@ import { Observable, Subscription } from 'rxjs';
     MatRadioModule,
     CommonModule,
     MatCheckboxModule,
+    MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './guestform.component.html',
   styleUrl: './guestform.component.css'
 })
 export class GuestformComponent implements OnInit {
-  guestForm: FormGroup;
   selectedValue: boolean = true;
-  //formNames: string[] = ['name', 'surname', 'guestAcceptance', 'food', 'transfer', 'childrens', 'schampange', 'vine', 'strongalcohol', 'alcoholfree', 'comment']
+  @Input() guest!: Guest;
+  @Output() deleteGuest: EventEmitter<any> = new EventEmitter<any>();
 
-  @Input() saveGuest!: Observable<void>;
-  private eventsSubscription: Subscription;
-  @Output() sendGuest: EventEmitter<any> = new EventEmitter();
+  errorMessage = signal('');
 
-  constructor(private el: ElementRef) {
-    this.guestForm = new FormGroup({});
-    this.guestForm.addControl('name', new FormControl('', [Validators.required]));
-    this.guestForm.addControl('surname', new FormControl('', [Validators.required]));
-    this.guestForm.addControl('guestAcceptance', new FormControl(true, [Validators.required]));
-    this.guestForm.addControl('food', new FormControl('', [Validators.required]));
-    this.guestForm.addControl('transfer', new FormControl(true, [Validators.required]));
-    this.guestForm.addControl('childrens', new FormControl(false, [Validators.required]));
+  showErrorName: boolean = false;
+  showErrorSurname: boolean = false;
+  showErrorDrinks: boolean = false;
 
-    this.guestForm.addControl('schampange', new FormControl('', [Validators.required]));
-    this.guestForm.addControl('vine', new FormControl('', [Validators.required]));
-    this.guestForm.addControl('strongalcohol', new FormControl('', [Validators.required]));
-    this.guestForm.addControl('alcoholfree', new FormControl('', [Validators.required]));
+  FOOD_ENUM: Food[] = [
+    { foodName: 'Мясо' },
+    { foodName: 'Рыба' },
+    { foodName: 'Овощи и грибы' },
+  ]
 
-    this.guestForm.addControl('comment', new FormControl(''));
+  nameFc: FormControl = new FormControl('', [Validators.required]);
+  surnameFc: FormControl = new FormControl('', [Validators.required]);
+  guestAcceptanceFc: FormControl = new FormControl(true, [Validators.required])
+  foodFc: FormControl = new FormControl(this.FOOD_ENUM[0].foodName, [Validators.required]);
+  transferFc: FormControl = new FormControl(true, [Validators.required])
+  childrensFc: FormControl = new FormControl(false, [Validators.required])
+  nightFc: FormControl = new FormControl(true, [Validators.required])
 
-    this.eventsSubscription = new Subscription;
+  schampangeFc: FormControl = new FormControl(false, [Validators.required])
+  vineFc: FormControl = new FormControl(false, [Validators.required])
+  strongalcoholFc: FormControl = new FormControl(false, [Validators.required])
+  alcoholfreeFc: FormControl = new FormControl(false, [Validators.required])
+
+  commentFc: FormControl = new FormControl('');
+
+  guestForm = new FormGroup({
+    'name': this.nameFc,
+    'surname': this.surnameFc,
+    'guestAcceptance': this.guestAcceptanceFc,
+    'food': this.foodFc,
+    'transfer': this.transferFc,
+    'childrens': this.childrensFc,
+    'night': this.nightFc,
+
+    'schampange': this.schampangeFc,
+    'vine': this.vineFc,
+    'strongalcohol': this.strongalcoholFc,
+    'alcoholfree': this.alcoholfreeFc,
+
+    'comment': this.commentFc
+  });
+
+
+  constructor() {
+    merge(this.nameFc.statusChanges, this.nameFc.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.checkErrorName());
+    merge(this.surnameFc.statusChanges, this.surnameFc.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.checkErrorSurname());
+    merge(this.schampangeFc.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.checkErrorDrinks());
+    merge(this.vineFc.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.checkErrorDrinks());
+      merge(this.strongalcoholFc.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.checkErrorDrinks());
+      merge(this.alcoholfreeFc.valueChanges)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.checkErrorDrinks());
   }
 
 
   ngOnInit(): void {
-    this.saveGuest.subscribe(() => this.doSendGuestInfo());
   }
 
   ngOnDestroy() {
-    this.eventsSubscription.unsubscribe();
   }
 
   onChange(event: MatRadioChange) {
-    if (event.value === "true") {
+    if (event.value === true) {
       this.selectedValue = true;
-      this.guestForm.addControl('food', new FormControl('', [Validators.required]));
-      this.guestForm.addControl('transfer', new FormControl(true, [Validators.required]));
-      this.guestForm.addControl('childrens', new FormControl(false, [Validators.required]));
+      this.foodFc.setValue(this.FOOD_ENUM[0].foodName);
+      this.transferFc.setValue(true);
+      this.childrensFc.setValue(false);
+      this.nightFc.setValue(true);
 
-      this.guestForm.addControl('schampange', new FormControl('', [Validators.required]));
-      this.guestForm.addControl('vine', new FormControl('', [Validators.required]));
-      this.guestForm.addControl('strongalcohol', new FormControl('', [Validators.required]));
-      this.guestForm.addControl('alcoholfree', new FormControl('', [Validators.required]));
-
-      this.guestForm.addControl('comment', new FormControl('', [Validators.required]));
+      this.schampangeFc.setValue(false);
+      this.vineFc.setValue(false);
+      this.strongalcoholFc.setValue(false);
+      this.alcoholfreeFc.setValue(false);
+      this.commentFc.setValue('');
     } else {
       this.selectedValue = false;
-      this.guestForm.removeControl('food');
-      this.guestForm.removeControl('transfer');
-      this.guestForm.removeControl('childrens');
+      this.foodFc.setValue('');
+      this.transferFc.setValue(false);
+      this.childrensFc.setValue(false);
+      this.nightFc.setValue(false);
 
-      this.guestForm.removeControl('schampange');
-      this.guestForm.removeControl('vine');
-      this.guestForm.removeControl('strongalcohol');
-      this.guestForm.removeControl('alcoholfree');
-
-      this.guestForm.removeControl('comment');
+      this.schampangeFc.setValue(false);
+      this.vineFc.setValue(false);
+      this.strongalcoholFc.setValue(false);
+      this.alcoholfreeFc.setValue(false);
+      this.commentFc.setValue('');
     }
+  }
+
+  doDeleteGuest() {
+    this.deleteGuest.emit();
   }
 
   doSendGuestInfo() {
     // if (this.validateFields()) {
-    var guest: Guest = {
-      name: this.guestForm.value.name,
-      surname: this.guestForm.value.surname,
-      guestAcceptance: this.guestForm.value.guestAcceptance === true ? true : false,
-      food: this.guestForm.value.food,
-      transfer: this.guestForm.value.transfer === true ? true : false,
-      childrens: this.guestForm.value.childrens === true ? true : false,
-      schampange: this.guestForm.value.schampange,
-      vine: this.guestForm.value.vine,
-      strongalcohol: this.guestForm.value.strongalcohol,
-      alcoholfree: this.guestForm.value.alcoholfree,
-      comment: this.guestForm.value.comment
-    }
-    this.sendGuest.emit(guest);
-}
+    this.checkErrorName();
+    this.checkErrorSurname();
+    this.checkErrorDrinks();
+
+    this.guest.name = this.guestForm.value.name,
+      this.guest.surname = this.guestForm.value.surname,
+      this.guest.guestAcceptance = this.guestForm.value.guestAcceptance === true ? true : false,
+      this.guest.food = this.guestForm.value.food,
+      this.guest.transfer = this.guestForm.value.transfer === true ? true : false,
+      this.guest.childrens = this.guestForm.value.childrens === true ? true : false,
+      this.guest.night = this.guestForm.value.night === true ? true : false,
+
+      this.guest.schampange = this.guestForm.value.schampange === true ? true : false,
+      this.guest.vine = this.guestForm.value.vine === true ? true : false,
+      this.guest.strongalcohol = this.guestForm.value.strongalcohol === true ? true : false,
+      this.guest.alcoholfree = this.guestForm.value.alcoholfree === true ? true : false,
+      this.guest.comment = this.guestForm.value.comment,
+      this.guest.haserror = this.showErrorName || this.showErrorSurname || (this.guest.guestAcceptance && this.showErrorDrinks)
+  }
 
 
-validateFields() {
-  for (const key of Object.keys(this.guestForm.controls)) {
-    if (this.guestForm.controls[key].invalid) {
-      (<any>this.guestForm.get(key)).nativeElement.focus();
-      return false;
+  checkErrorName() {
+    if (this.nameFc.hasError('required')) {
+      this.errorMessage.set('Это поле обязательно');
+      this.showErrorName = true;
+      this.nameFc.markAsTouched()
+    } else {
+      this.showErrorName = false;
     }
   }
-  return true;
-}
+
+  checkErrorSurname() {
+    if (this.surnameFc.hasError('required')) {
+      this.errorMessage.set('Это поле обязательно');
+      this.showErrorSurname = true;
+      this.surnameFc.markAsTouched()
+    } else {
+      this.showErrorSurname = false;
+    }
+  }
+
+  checkErrorDrinks() {
+    if (this.alcoholfreeFc.value !== true
+      && this.strongalcoholFc.value !== true
+      && this.vineFc.value !== true
+      && this.schampangeFc.value !== true) {
+      this.errorMessage.set('Это поле обязательно');
+      this.showErrorDrinks = true;
+    } else {
+      this.showErrorDrinks = false;
+    }
+  }
 
 }
 
 
 interface Guest {
+  id: number,
   name: string,
   surname: string,
   guestAcceptance: boolean,
   food: string,
   transfer: boolean,
   childrens: boolean,
+  night: boolean
   schampange: boolean,
   vine: boolean,
   strongalcohol: boolean,
   alcoholfree: boolean,
-  comment: string
+  comment: string,
+  haserror: boolean
+}
+
+interface Food {
+  foodName: string
 }

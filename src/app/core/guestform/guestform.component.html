@@ -1,49 +1,77 @@
 <ng-container>
-    <div>
-        <form [formGroup]="guestForm" appFocusInvalidInput>
-            <mat-form-field>
-                <input matInput placeholder="Введите имя*" formControlName="name" />
-            </mat-form-field>
-            <mat-form-field>
-                <input matInput placeholder="Введите фамилию*" formControlName="surname" />
-            </mat-form-field>
-            <mat-radio-group formControlName="guestAcceptance" (change)="onChange($event)">
-                <mat-radio-button [value]="true" [checked]="true">Буду</mat-radio-button>
-                <mat-radio-button [value]="false">Не смогу прийти</mat-radio-button>
-            </mat-radio-group>
-            <ng-container *ngIf="selectedValue">
-                <div>
-                    <label>Что вы предпочитаете в качестве основного блюда?</label>
-                    <mat-radio-group formControlName="food">
-                        <mat-radio-button value="meat" [checked]="true">Мясо</mat-radio-button>
-                        <mat-radio-button value="fish" >Рыба</mat-radio-button>
-                    </mat-radio-group>
+    <div class="formBlock">
+        <form [formGroup]="guestForm" appFocusInvalidInput autocomplete="off">
+            <div class="nameSurnameDelete">
+                <div class="inputValue">
+                    <mat-form-field autocomplete="off">
+                        <input matInput placeholder="Введите имя*" formControlName="name" autocomplete="off" />
+                        <mat-error *ngIf="showErrorName">{{errorMessage()}}</mat-error>
+                    </mat-form-field>
                 </div>
-                <div>
-                    <label>Будет ли вам необходим трансфер?</label>
+                <div class="inputValue">
+                    <mat-form-field autocomplete="off">
+                        <input matInput placeholder="Введите фамилию*" formControlName="surname" autocomplete="off" />
+                        <mat-error *ngIf="showErrorSurname">{{errorMessage()}}</mat-error>
+                    </mat-form-field>
+                </div>
+                <button mat-fab class="leftedButton" (click)="doDeleteGuest()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <div class="question">
+                <mat-label>Подтвердите присутствие</mat-label>
+                <mat-radio-group formControlName="guestAcceptance" (change)="onChange($event)">
+                    <mat-radio-button [value]="true" [checked]="true">Буду</mat-radio-button>
+                    <mat-radio-button [value]="false">Не смогу прийти</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <ng-container *ngIf="selectedValue">
+                <div class="divider"></div>
+                <div class="question">
+                    <mat-label class="inputLabel">Основное блюдо?</mat-label>
+                    <mat-form-field class="selectFood">
+                        <mat-select formControlName="food">
+                            <mat-option *ngFor="let food of FOOD_ENUM"
+                                [value]="food.foodName">{{food.foodName}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="question">
+                    <mat-label>Будет ли вам необходим трансфер?</mat-label>
                     <mat-radio-group formControlName="transfer">
                         <mat-radio-button [value]="true" [checked]="true">Да</mat-radio-button>
                         <mat-radio-button [value]="false">Нет</mat-radio-button>
                     </mat-radio-group>
                 </div>
-                <div>
+
+                <div class="question">
                     <label>Будете ли вы с детьми?</label>
                     <mat-radio-group formControlName="childrens">
                         <mat-radio-button [value]="true">Да</mat-radio-button>
                         <mat-radio-button [value]="false">Нет</mat-radio-button>
                     </mat-radio-group>
                 </div>
-                <div>
-                    <label>Предпочтения по алкоголю*</label>
+                <div class="question">
+                    <label>Останетесь ли вы на ночь?</label>
+                    <mat-radio-group formControlName="night">
+                        <mat-radio-button [value]="true">Да</mat-radio-button>
+                        <mat-radio-button [value]="false">Нет</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div class="question">
+                    <label>Предпочтения по напиткам*</label>
+                    @if (showErrorDrinks) {
+                    <mat-error class="errorFont">{{errorMessage()}}</mat-error>
+                    }
                     <mat-checkbox formControlName="schampange">Игристое</mat-checkbox>
                     <mat-checkbox formControlName="vine">Вино</mat-checkbox>
                     <mat-checkbox formControlName="strongalcohol">Крепкий алкоголь</mat-checkbox>
                     <mat-checkbox formControlName="alcoholfree">Безалкогольные напитки</mat-checkbox>
                 </div>
-                <div>
-                    <label>Комментарий</label>
+                <div class="question">
+                    <mat-label class="inputLabel">Комментарий</mat-label>
                     <mat-form-field>
-                        <input matInput placeholder="Любые пожелания..." formControlName="comment" />
+                        <textarea matInput placeholder="Любые пожелания..." formControlName="comment"></textarea>
                     </mat-form-field>
                 </div>
             </ng-container>

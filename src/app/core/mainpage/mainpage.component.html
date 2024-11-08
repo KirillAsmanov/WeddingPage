@@ -9,8 +9,8 @@
     </div>
 
     <div class="slogan">
-        <h1 class="slogan_header">Дорогие друзья!</h1>
-        <p class="slogan_text">
+        <p class="text_white_header">Дорогие друзья!</p>
+        <p class="text_white_content">
             Жить, любить, чувствовать...
             <br>
             <br>
@@ -23,35 +23,108 @@
             <br>
             Увидимся на нашей свадьбе!
         </p>
+        <div class="footer"></div>
+    </div>
+
+
+    <div class="faq">
+        <p class="text_peach_header">Отвечаем на ваши вопросы</p>
+
+
+        <p class="text_peach_mini_header">Нужно ли дарить цветы?</p>
+        <p class="text_peach_content">Просим вас не дарить цветы, так как на следующий день мы улетаем в свадебное
+            путешествие и
+            не успеем насладиться красивыми букетами.</p>
+        <div class="divider"></div>
+        <p class="text_peach_mini_header">Нужно ли дарить цветы?</p>
+        <p class="text_peach_content">Просим вас не дарить цветы, так как на следующий день мы улетаем в свадебное
+            путешествие и
+            не успеем насладиться красивыми букетами.</p>
+        <div class="divider"></div>
+        <p class="text_peach_mini_header">Нужно ли дарить цветы?</p>
+        <p class="text_peach_content">Просим вас не дарить цветы, так как на следующий день мы улетаем в свадебное
+            путешествие и
+            не успеем насладиться красивыми букетами.</p>
+
+        <div class="footer"></div>
+    </div>
+
+    <div class="programm">
+        <p class="text_white_header">Программа дня</p>
+
+        <mat-stepper orientation="vertical" [linear]="isLinear" #stepper class="custom-stepper">
+            <mat-step [completed]="false" [editable]="true">
+                <ng-template matStepLabel class="label">9:00 Утро невесты</ng-template>
+                <p class="programmContent">Поля собирается одевается и красивая</p>
+                <p class="programmContent">чудесная счастливая бежит хрюндится</p>
+            </mat-step>
+            <mat-step [completed]="false" [editable]="true">
+                <ng-template matStepLabel class="label">12:00 Трансфер</ng-template>
+                <p class="programmContent">От метро "пр. Ветеранов"</p>
+                <a mat-flat-button href="https://yandex.ru/maps/org/vinity_forest/188848202756/?ll=29.407674%2C59.726127&z=12.66" target="_blank" class="mapLink">
+                    <mat-icon>where_to_vote</mat-icon>
+                    на карте
+                </a>
+            </mat-step>
+            <mat-step [completed]="false" [editable]="true">
+                <ng-template matStepLabel class="label">16:00 Собираемся на месте</ng-template>
+                <p class="programmContent">Банкетный зал Vinity Forest</p>
+                <a mat-flat-button href="https://yandex.ru/maps/org/vinity_forest/188848202756/?ll=29.407674%2C59.726127&z=12.66" target="_blank" class="mapLink">
+                    <mat-icon>where_to_vote</mat-icon>
+                    на карте
+                </a>
+            </mat-step>
+            <mat-step [completed]="false" [editable]="true">
+                <ng-template matStepLabel class="label">18:00 Церемония</ng-template>
+            </mat-step>
+            <mat-step [completed]="false" [editable]="true">
+                <ng-template matStepLabel class="label">23:00 Окончание праздника</ng-template>
+                <p class="programmContent">Свободное время</p>
+                <p class="programmContent">Можно остаться на ночь</p>
+            </mat-step>
+        </mat-stepper>
+        <div class="footer"></div>
     </div>
 
 
     <div class="rsvp">
-        <h1 class="rsvp_header">RSVP</h1>
-        <p class="rsvp_text">
-            Пожалуйста, подтвердите или отклоните участие.
-            <br>
-            <br>
-            Мы стараемся сделать праздник незабываемым, поэтому будем рады, если вы подтвердите свое присутствие в
-            ближайшее время
-        </p>
-        <div class="button-row" *ngIf="!accept">
-            <button mat-flat-button class="acceptButton" (click)="onAccept()">Ответить</button>
-        </div>
-        <div *ngIf="accept">
-            <app-guestform *ngFor="let i of guestsCounter" [saveGuest]="eventsSubject.asObservable()" (sendGuest)="doAddGuestToList($event)">
-
-            </app-guestform>
-            <div class="button-row">
-                <button mat-flat-button class="acceptButton" (click)="onAdd()">Добавить</button>
+        <p class="text_peach_header">RSVP</p>
+        <ng-container *ngIf="!save">
+            <p class="text_peach_content">
+                Пожалуйста, подтвердите или отклоните участие.
+                <br>
+                <br>
+                Мы стараемся сделать праздник незабываемым, поэтому будем рады, если вы подтвердите свое присутствие в
+                ближайшее время
+            </p>
+            <div class="button-row" *ngIf="!accept">
+                <button mat-flat-button class="acceptButton" (click)="onAccept()">Ответить</button>
+                <div class="footer"></div>
             </div>
-            <div class="button-row">
-                <button mat-flat-button class="acceptButton" (click)="onSave()">Сохранить</button>
+            <div *ngIf="accept">
+                <app-guestform *ngFor="let g of guests" [guest]="g" (deleteGuest)="onDeleteGuest(g)"></app-guestform>
+                <div class="centerButton">
+                    <button mat-fab (click)="onAdd()">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </div>
+                <div class="centerButton">
+                    <button class="button-row" mat-flat-button (click)="onSave()">Сохранить и отправить</button>
+                </div>
+                <div class="footer"></div>
             </div>
-        </div>
+        </ng-container>
+        <ng-container *ngIf="save">
+            <div class="success_block">
+                <mat-icon class="success_icon">done_outline</mat-icon>
+            </div>
+            <div class="thx">Спасибо за ваш ответ!</div>
+            <div class="footer"></div>
+        </ng-container>
     </div>
 
 
+    <!---
     <div class="faq">
         <div class="rsvp">
             <mat-stepper orientation="vertical" [linear]="isLinear" #stepper class="custom-stepper">
@@ -67,4 +140,5 @@
             </mat-stepper>
         </div>
     </div>
+    -->
 </div>

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, FormGroup, FormArray } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import { GuestformComponent } from "../guestform/guestform.component";
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-mainpage',
@@ -39,9 +38,12 @@ export class MainpageComponent {
   isLinear = false;
   steps = [1, 2, 3];
   accept = false;
+  save = false;
   guests: Guest[] = [];
-  guestsCounter: number[] = [1];
-  eventsSubject: Subject<void> = new Subject<void>();
+
+  counter: number = 0;
+
+  @ViewChildren(GuestformComponent) guestForm: QueryList<GuestformComponent> | undefined
 
   constructor() {
   }
@@ -49,32 +51,83 @@ export class MainpageComponent {
 
   onAccept() {
     this.accept = !this.accept;
+    this.guests.push({
+      id: this.counter++,
+      name: '',
+      surname: '',
+      guestAcceptance: false,
+      food: '',
+      transfer: false,
+      childrens: false,
+      night: false,
+      schampange: false,
+      vine: false,
+      strongalcohol: false,
+      alcoholfree: false,
+      comment: '',
+      haserror: true
+    })
   }
 
   onSave() {
-    this.eventsSubject.next();
+    var hasErrors = false;
+    this.guestForm?.forEach(element => {
+      element.doSendGuestInfo()
+    });
+    this.guestForm?.notifyOnChanges();
+    console.log(this.guests)
+    for (var guest of this.guests) {
+      if (guest.haserror) {
+        hasErrors = true;
+        break;
+      }
+    }
+    if (hasErrors !== true) {
+      this.save = !this.save
+    }
   }
+
+
 
   onAdd() {
-    this.guestsCounter.push(1);
+    this.guests.push({
+      id: this.counter++,
+      name: '',
+      surname: '',
+      guestAcceptance: false,
+      food: '',
+      transfer: false,
+      childrens: false,
+      night: false,
+      schampange: false,
+      vine: false,
+      strongalcohol: false,
+      alcoholfree: false,
+      comment: '',
+      haserror: true
+    })
   }
 
-  doAddGuestToList($guest: Guest) {
-    this.guests.push($guest);
-    console.log(this.guests)
+  onDeleteGuest(guest: Guest) {
+    this.guests.forEach((x, index) => {
+      if (x.id === guest.id) this.guests.splice(index, 1)
+    });
   }
 }
 
 interface Guest {
+  id: number,
   name: string,
   surname: string,
   guestAcceptance: boolean,
   food: string,
   transfer: boolean,
   childrens: boolean,
+  night: boolean
   schampange: boolean,
   vine: boolean,
   strongalcohol: boolean,
   alcoholfree: boolean,
   comment: string
+  haserror: boolean
 }

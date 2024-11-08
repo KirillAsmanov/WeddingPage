@@ -1,15 +1,53 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .custom-stepper {
-    .mat-vertical-content-container .mat-vertical-stepper-content {
-        display: none !important;
+
+    .mat-vertical-stepper-content {
+        visibility: visible !important;
+        height: 100% !important;
     }
 
+
     .mat-step-icon {
-        background-color: var(--mat-stepper-header-selected-state-icon-background-color);
+        background-color: white;
         color: var(--mat-stepper-header-selected-state-icon-foreground-color);
     }
+
+    .mat-step-text-label {
+        color: white;
+    }
+
+    .mat-step {
+        background-color: #c99979;
+    }
+
+    .mat-stepper-vertical-line {
+        color: white;
+    }
+
+    .mat-step-text-label {
+        font-size: 2em;
+    }
+
+    .mat-stepper-vertical-line::before {
+        border-left-color: white;
+    }
+}
+
+p {
+    margin: 0px;
+}
+
+.mat-mdc-unelevated-button {
+    background-color: rgb(243, 167, 109) !important;
 }

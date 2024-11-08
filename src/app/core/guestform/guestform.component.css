@@ -1,0 +1,45 @@
+.formBlock {
+    border: solid 1px gray;
+    border-radius: 10px;
+    margin-top: 0.5em;
+}
+
+.inputValue {
+    margin-left: 1em;
+    margin-top: 1em;
+}
+
+.leftedButton {
+    margin-top: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.nameSurnameDelete {
+    display: flex;
+}
+
+.acceptanceBlock {
+    margin-left: 1em;
+}
+
+.question {
+    margin-left: 1em;
+    margin-right: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.divider {
+    border-bottom: solid 1px gray; 
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.inputLabel {
+    margin-bottom: 0.7em;
+}
+
+.errorFont {
+    font-size: 12px;
+}
