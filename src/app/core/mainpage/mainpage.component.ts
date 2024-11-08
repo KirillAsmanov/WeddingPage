@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
 import { GuestformComponent } from "../guestform/guestform.component";
+import emailjs, { type EmailJSResponseStatus } from '@emailjs/browser';
 
 @Component({
   selector: 'app-mainpage',
@@ -36,7 +37,6 @@ import { GuestformComponent } from "../guestform/guestform.component";
 })
 export class MainpageComponent {
   isLinear = false;
-  steps = [1, 2, 3];
   accept = false;
   save = false;
   guests: Guest[] = [];
@@ -58,7 +58,6 @@ export class MainpageComponent {
       guestAcceptance: false,
       food: '',
       transfer: false,
-      childrens: false,
       night: false,
       schampange: false,
       vine: false,
@@ -75,7 +74,7 @@ export class MainpageComponent {
       element.doSendGuestInfo()
     });
     this.guestForm?.notifyOnChanges();
-    console.log(this.guests)
+    console.log(this.humanizeGuestsOutput())
     for (var guest of this.guests) {
       if (guest.haserror) {
         hasErrors = true;
@@ -84,7 +83,43 @@ export class MainpageComponent {
     }
     if (hasErrors !== true) {
       this.save = !this.save
+      emailjs.init('SCrpGc_xg8ABD4muk');
+      emailjs.send("KirillPolinaWedding", "template_xppn4s8", {
+        humanRead: this.humanizeGuestsOutput(),
+        message: JSON.stringify(this.guests)
+      });
     }
+  }
+
+
+  humanizeGuestsOutput(): string {
+    var humanizeString = 'Гости: ' + '\n';
+    for (var guest of this.guests) {
+      humanizeString = humanizeString + 'Имя: ' + guest.name + ' ' + guest.surname + '\n';
+      humanizeString = humanizeString + 'Присутствие: ' + guest.guestAcceptance + '\n';
+      if (guest.guestAcceptance) {
+        humanizeString = humanizeString + 'Еда: ' + guest.food + '\n';
+        humanizeString = humanizeString + 'Трансфер: ' + guest.transfer + '\n';
+        humanizeString = humanizeString + 'Остается на ночь: ' + guest.night + '\n';
+        humanizeString = humanizeString + 'Напитки: ';
+        if (guest.schampange === true) {
+          humanizeString = humanizeString + 'Игристое' + ' ';
+        }
+        if (guest.vine === true) {
+          humanizeString = humanizeString + 'Вино' + ' ';
+        }
+        if (guest.strongalcohol === true) {
+          humanizeString = humanizeString + 'Крепкое' + ' ';
+        }
+        if (guest.alcoholfree === true) {
+          humanizeString = humanizeString + 'Безлкогольное' + ' ';
+        }
+        humanizeString = humanizeString + '\n';
+        humanizeString = humanizeString + 'Комментарий: ' + guest.comment + '\n';
+      }
+      humanizeString = humanizeString + '\n';
+    }
+    return humanizeString;
   }
 
 
@@ -97,7 +132,6 @@ export class MainpageComponent {
       guestAcceptance: false,
       food: '',
       transfer: false,
-      childrens: false,
       night: false,
       schampange: false,
       vine: false,
@@ -122,7 +156,6 @@ interface Guest {
   guestAcceptance: boolean,
   food: string,
   transfer: boolean,
-  childrens: boolean,
   night: boolean
   schampange: boolean,
   vine: boolean,

@@ -55,7 +55,6 @@ export class GuestformComponent implements OnInit {
   guestAcceptanceFc: FormControl = new FormControl(true, [Validators.required])
   foodFc: FormControl = new FormControl(this.FOOD_ENUM[0].foodName, [Validators.required]);
   transferFc: FormControl = new FormControl(true, [Validators.required])
-  childrensFc: FormControl = new FormControl(false, [Validators.required])
   nightFc: FormControl = new FormControl(true, [Validators.required])
 
   schampangeFc: FormControl = new FormControl(false, [Validators.required])
@@ -71,7 +70,6 @@ export class GuestformComponent implements OnInit {
     'guestAcceptance': this.guestAcceptanceFc,
     'food': this.foodFc,
     'transfer': this.transferFc,
-    'childrens': this.childrensFc,
     'night': this.nightFc,
 
     'schampange': this.schampangeFc,
@@ -116,7 +114,6 @@ export class GuestformComponent implements OnInit {
       this.selectedValue = true;
       this.foodFc.setValue(this.FOOD_ENUM[0].foodName);
       this.transferFc.setValue(true);
-      this.childrensFc.setValue(false);
       this.nightFc.setValue(true);
 
       this.schampangeFc.setValue(false);
@@ -128,7 +125,6 @@ export class GuestformComponent implements OnInit {
       this.selectedValue = false;
       this.foodFc.setValue('');
       this.transferFc.setValue(false);
-      this.childrensFc.setValue(false);
       this.nightFc.setValue(false);
 
       this.schampangeFc.setValue(false);
@@ -154,7 +150,6 @@ export class GuestformComponent implements OnInit {
       this.guest.guestAcceptance = this.guestForm.value.guestAcceptance === true ? true : false,
       this.guest.food = this.guestForm.value.food,
       this.guest.transfer = this.guestForm.value.transfer === true ? true : false,
-      this.guest.childrens = this.guestForm.value.childrens === true ? true : false,
       this.guest.night = this.guestForm.value.night === true ? true : false,
 
       this.guest.schampange = this.guestForm.value.schampange === true ? true : false,
@@ -208,7 +203,6 @@ interface Guest {
   guestAcceptance: boolean,
   food: string,
   transfer: boolean,
-  childrens: boolean,
   night: boolean
   schampange: boolean,
   vine: boolean,
